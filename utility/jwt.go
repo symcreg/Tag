@@ -15,7 +15,7 @@ type Jwt struct {
 	jwt.StandardClaims
 }
 
-func GenerateTokenHandler(c gin.Context) {
+func GenerateTokenHandler(c *gin.Context) {
 	var claim Jwt
 	c.ShouldBindJSON(&claim)
 	claim.ExpiresAt = time.Now().Add(ExpireTime).Unix() //过期时间
