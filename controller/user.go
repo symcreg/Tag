@@ -7,11 +7,12 @@ import (
 )
 
 type User struct {
-	Id       int    `json:"id"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Email    string `json:"email"`
-	isVerify bool
+	Id        int    `json:"id"`
+	Username  string `json:"username"`
+	Password  string `json:"password"`
+	Email     string `json:"email"`
+	isVerify  bool
+	VerifyUrl string
 }
 
 func Register(c *gin.Context) {
@@ -26,6 +27,9 @@ func Register(c *gin.Context) {
 		return
 	} //判断是否符合格式，应为4至16位
 	user.Password, _ = utility.HashPassword(user.Password) //hash加密密码,存入数据库的为hash值
+	url := Md5(user.Email)
+	user.VerifyUrl = url      //验证url
+	utility.EmailVerify(user) //发送验证邮件
 	db, err := gorm.Open("sqlite3", "tag.wall")
 	if err != nil {
 		panic(err)
